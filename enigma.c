@@ -59,7 +59,7 @@ int* parse_rotor_indices(char* rotor_ind_str, int num_rotors) {
     
 }
 
-/**
+/** unite test
 void test_parse_rotor_indices(){
     int expected_result[3] = {1,2,3};
     int *actual_result = parse_rotor_indices("1 2 3",3);
