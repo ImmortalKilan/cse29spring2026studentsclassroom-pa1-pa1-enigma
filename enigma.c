@@ -1,4 +1,5 @@
-#include <stdio.h>
+    
+    #include <stdio.h>
 #include <stdlib.h>
 // Do not include other standard library headers
 
@@ -91,7 +92,35 @@ void test_parse_rotor_indices(){
  * @return                2D array where each row represents a rotor
  */
 int **set_up_rotors(int* rotor_indices, int num_rotors) {
-    // TODO
+    int** index_array = malloc(num_rotors * sizeof(char*));
+    if (index_array == NULL){
+        printf("Memory allocation failed!\n");
+        exit(1);
+    }
+    for (int i = 0; i < num_rotors; i++){
+        int* rotor_in_decimal = malloc(26 * sizeof(int));
+        for (int j = 0; j < 26; j++){
+            char* rotor = enigma_rotors[rotor_indices[i]];
+            rotor_in_decimal[j] = rotor[j] - 'A';
+        }
+        index_array[i] = rotor_in_decimal;
+    }
+    return index_array;
+}
+
+void test_set_up_rotors(){
+    int rotor_indices[3] = {1,2,3};
+    int** rotor_config = set_up_rotors(rotor_indices, 3);
+    for (int i = 0; i < 3; i++){
+        for (int j = 0; j < 26; j++){
+            printf("%d ", rotor_config[i][j]);
+        }
+        printf("\n");
+    }
+    for (int i = 0; i < 3; i++){
+        free(rotor_config[i]);
+    }
+    free(rotor_config);
 }
 
 
@@ -103,7 +132,7 @@ int **set_up_rotors(int* rotor_indices, int num_rotors) {
  * @param rotations      Number of rotations
  */
 void rotate_rotors(int** rotor_config, int num_rotors, int rotations) {
-    // TODO
+    
 }
 
 /*
@@ -141,5 +170,5 @@ char* decrypt(char *message, int** rotor_config, int num_rotors) {
  *    0    - number of rotations of the rotors
  */
 int main(int argc, char* argv[]) {
-    test_parse_rotor_indices();
+    return 0;
 }
