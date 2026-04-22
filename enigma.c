@@ -279,7 +279,7 @@ int main(int argc, char* argv[]) {
             rotate_rotors(rotor_config, num_rotors, rotations);
         }
         char* encrypted_message = encrypt(message, rotor_config, num_rotors);
-        printf("%s\n", encrypted_message);
+        printf("Encrypted message: %s\n", encrypted_message);
         free(encrypted_message);
     }
     else if (mode == 'd'){
@@ -287,7 +287,7 @@ int main(int argc, char* argv[]) {
             rotate_rotors(rotor_config, num_rotors, rotations);
         }
         char* decrypted_message = decrypt(message, rotor_config, num_rotors);
-        printf("%s\n", decrypted_message);
+        printf("Decrypted message: %s\n", decrypted_message);
         free(decrypted_message);
     }
     else{
