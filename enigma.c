@@ -182,19 +182,15 @@ char* encrypt(char *message, int** rotor_config, int num_rotors) {
     }
     for (int i = 0; message[i] != '\0'; i++){
         char c = message[i];
+            if (c >= 'a' && c <= 'z'){
+                c = c - 'a' + 'A';
+            }
         if (c >= 'A' && c <= 'Z'){
             int index = c - 'A';
             for (int j = 0; j < num_rotors; j++){
                 index = rotor_config[j][index];
             }
             encrypted_message[i] = index + 'A';
-        }
-        else if (c >= 'a' && c <= 'z'){
-            int index = c - 'a';
-            for (int j = 0; j < num_rotors; j++){
-                index = rotor_config[j][index];
-            }
-            encrypted_message[i] = index + 'a';
         }
         else{
             encrypted_message[i] = c;
@@ -232,9 +228,12 @@ char* decrypt(char *message, int** rotor_config, int num_rotors) {
     }
     for (int i = 0; message[i] != '\0'; i++){
         char c = message[i];
+        if (c >= 'a' && c <= 'z'){
+            c = c - 'a' + 'A';
+        }
         if (c >= 'A' && c <= 'Z'){
             int index = c - 'A';
-            for (int j = num_rotors - 1; j >= 0; j--){
+            for (int j = 0; j < num_rotors; j++){
                 for (int k = 0; k < ALPHABET_SIZE; k++){
                     if (rotor_config[j][k] == index){
                         index = k;
