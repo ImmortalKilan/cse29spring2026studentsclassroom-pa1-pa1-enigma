@@ -59,7 +59,7 @@ int* parse_rotor_indices(char* rotor_ind_str, int num_rotors) {
     
 }
 
-/** unite test
+
 void test_parse_rotor_indices(){
     int expected_result[3] = {1,2,3};
     int *actual_result = parse_rotor_indices("1 2 3",3);
@@ -80,7 +80,7 @@ void test_parse_rotor_indices(){
     }
     free(actual_result);
 }
-/
+
 
 /*
  * Create a 2D array of integers where each row represents a rotor.
