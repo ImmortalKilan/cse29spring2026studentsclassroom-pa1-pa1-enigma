@@ -1,5 +1,4 @@
-    
-    #include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 // Do not include other standard library headers
 
@@ -100,7 +99,7 @@ int **set_up_rotors(int* rotor_indices, int num_rotors) {
     for (int i = 0; i < num_rotors; i++){
         int* rotor_in_decimal = malloc(26 * sizeof(int));
         for (int j = 0; j < 26; j++){
-            char* rotor = enigma_rotors[rotor_indices[i]];
+            const char* rotor = enigma_rotors[rotor_indices[i]];
             rotor_in_decimal[j] = rotor[j] - 'A';
         }
         index_array[i] = rotor_in_decimal;
@@ -109,7 +108,7 @@ int **set_up_rotors(int* rotor_indices, int num_rotors) {
 }
 
 void test_set_up_rotors(){
-    int rotor_indices[3] = {1,2,3};
+    int rotor_indices[3] = {1,3,4};
     int** rotor_config = set_up_rotors(rotor_indices, 3);
     for (int i = 0; i < 3; i++){
         for (int j = 0; j < 26; j++){
@@ -132,9 +131,41 @@ void test_set_up_rotors(){
  * @param rotations      Number of rotations
  */
 void rotate_rotors(int** rotor_config, int num_rotors, int rotations) {
-    
+    for (int row = 0; row < num_rotors; row++){
+        int* temp_arr = rotor_config[row];
+        for (int i = 0; i < rotations; i++){
+            int temp = temp_arr[25];
+            for (int j = 25; j > 0; j--){
+                temp_arr[j] = temp_arr[j-1];
+            }
+            temp_arr[0] = temp;
+        }
+    }
 }
 
+void test_rotate_rotors(){
+    int rotor_indices[3] = {1,3,4};
+    int** rotor_config = set_up_rotors(rotor_indices, 3);
+    rotate_rotors(rotor_config, 3, 29);
+    for (int i = 0; i < 3; i++){
+        for (int j = 0; j < 26; j++){
+            printf("%d ", rotor_config[i][j]);
+        }
+        printf("\n");
+    }
+    for (int i = 0; i < 3; i++){
+        free(rotor_config[i]);
+    }
+    free(rotor_config);
+}
+
+int my_strlen(char* str){
+    int length = 0;
+    while (str[length] != '\0'){
+        length++;
+    }
+    return length;
+}
 /*
  * Encrypt the given message
  *
@@ -144,7 +175,38 @@ void rotate_rotors(int** rotor_config, int num_rotors, int rotations) {
  * @return               Encrypted message
  */
 char* encrypt(char *message, int** rotor_config, int num_rotors) {
-    // TODO
+    char* encrypted_message = malloc((my_strlen(message) + 1) * sizeof(char));
+    if (encrypted_message == NULL){
+        printf("Memory allocation failed!\n");
+        exit(1);
+    }
+    for (int i = 0; message[i] != '\0'; i++){
+        char c = message[i];
+        if (c >= 'A' && c <= 'Z'){
+            int index = c - 'A';
+            for (int j = 0; j < num_rotors; j++){
+                index = rotor_config[j][index];
+            }
+            encrypted_message[i] = index + 'A';
+        }
+        else{
+            encrypted_message[i] = c;
+        }
+    }
+    encrypted_message[my_strlen(message)] = '\0';
+    return encrypted_message;
+}
+
+void test_encrypt(){
+    int rotor_indices[3] = {1,3,4};
+    int** rotor_config = set_up_rotors(rotor_indices, 3);
+    char* encrypted_message = encrypt("HELLO WORLD", rotor_config, 3);
+    printf("%s\n", encrypted_message);
+    free(encrypted_message);
+    for (int i = 0; i < 3; i++){
+        free(rotor_config[i]);
+    }
+    free(rotor_config);
 }
 
 /*
@@ -156,9 +218,44 @@ char* encrypt(char *message, int** rotor_config, int num_rotors) {
  * @return               Decrypted message
  */
 char* decrypt(char *message, int** rotor_config, int num_rotors) {
-    // TODO
+    char* decrypted_message = malloc((my_strlen(message) + 1) * sizeof(char));
+    if (decrypted_message == NULL){
+        printf("Memory allocation failed!\n");
+        exit(1);
+    }
+    for (int i = 0; message[i] != '\0'; i++){
+        char c = message[i];
+        if (c >= 'A' && c <= 'Z'){
+            int index = c - 'A';
+            for (int j = num_rotors - 1; j >= 0; j--){
+                for (int k = 0; k < ALPHABET_SIZE; k++){
+                    if (rotor_config[j][k] == index){
+                        index = k;
+                        break;
+                    }
+                }
+            }
+            decrypted_message[i] = index + 'A';
+        }
+        else{
+            decrypted_message[i] = c;
+        }
+    }
+    decrypted_message[my_strlen(message)] = '\0';
+    return decrypted_message;
 }
 
+void test_decrypt(){
+    int rotor_indices[3] = {1,3,4};
+    int** rotor_config = set_up_rotors(rotor_indices, 3);
+    char* decrypted_message = decrypt("MFNCZ YGJMG", rotor_config, 3);
+    printf("%s\n", decrypted_message);
+    free(decrypted_message);
+    for (int i = 0; i < 3; i++){
+        free(rotor_config[i]);
+    }
+    free(rotor_config);
+}
 /*
  * Format of command line input:
  * ./enigma e "JAVA" 3 "1 2 4" 0
@@ -170,5 +267,31 @@ char* decrypt(char *message, int** rotor_config, int num_rotors) {
  *    0    - number of rotations of the rotors
  */
 int main(int argc, char* argv[]) {
+    char mode = argv[1][0];
+    char* message = argv[2];
+    int num_rotors = atoi(argv[3]);
+    char* rotor_indices_str = argv[4];
+    int rotations = atoi(argv[5]);
+    int* rotor_indices = parse_rotor_indices(rotor_indices_str, num_rotors);
+    int** rotor_config = set_up_rotors(rotor_indices, num_rotors);
+    if (mode == 'e'){
+        if (rotations > 0){
+            rotate_rotors(rotor_config, num_rotors, rotations);
+        }
+        char* encrypted_message = encrypt(message, rotor_config, num_rotors);
+        printf("%s\n", encrypted_message);
+        free(encrypted_message);
+    }
+    else if (mode == 'd'){
+        if (rotations > 0){
+            rotate_rotors(rotor_config, num_rotors, rotations);
+        }
+        char* decrypted_message = decrypt(message, rotor_config, num_rotors);
+        printf("%s\n", decrypted_message);
+        free(decrypted_message);
+    }
+    else{
+        printf("Invalid mode! Use 'e' for encrypt and 'd' for decrypt.\n");
+    }
     return 0;
 }
