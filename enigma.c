@@ -189,6 +189,13 @@ char* encrypt(char *message, int** rotor_config, int num_rotors) {
             }
             encrypted_message[i] = index + 'A';
         }
+        else if (c >= 'a' && c <= 'z'){
+            int index = c - 'a';
+            for (int j = 0; j < num_rotors; j++){
+                index = rotor_config[j][index];
+            }
+            encrypted_message[i] = index + 'a';
+        }
         else{
             encrypted_message[i] = c;
         }
@@ -249,7 +256,7 @@ void test_decrypt(){
     int rotor_indices[3] = {1,3,4};
     int** rotor_config = set_up_rotors(rotor_indices, 3);
     char* decrypted_message = decrypt("MFNCZ YGJMG", rotor_config, 3);
-    printf("%s\n", decrypted_message);
+    printf("Decrypted message: %s\n", decrypted_message);
     free(decrypted_message);
     for (int i = 0; i < 3; i++){
         free(rotor_config[i]);
