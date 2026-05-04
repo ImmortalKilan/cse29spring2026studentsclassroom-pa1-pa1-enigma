@@ -218,7 +218,7 @@ char* encrypt(char *message, int** rotor_config, int num_rotors) {
             }
         if (c >= 'A' && c <= 'Z'){
             int index = c - 'A';
-            for (int j = 0; j < num_rotors; j++){
+            for (int j = num_rotors - 1; j >= 0; j--){
                 index = rotor_config[j][index];
             }
             encrypted_message[i] = index + 'A';
@@ -235,7 +235,7 @@ void test_encrypt(){
     int rotor_indices[3] = {1,3,4};
     int** rotor_config = set_up_rotors(rotor_indices, 3);
     char* encrypted_message = encrypt("HELLO WORLD", rotor_config, 3);
-    char* expected_result = "YDEEN VNUEI";
+    char* expected_result = "KLUUS GSTUO";
     int match = 1;
     for (int i = 0; i < my_strlen(expected_result); i++){
         if (encrypted_message[i] != expected_result[i]){
@@ -274,7 +274,7 @@ char* decrypt(char *message, int** rotor_config, int num_rotors) {
         }
         if (c >= 'A' && c <= 'Z'){
             int index = c - 'A';
-            for (int j = num_rotors - 1; j >= 0; j--){
+            for (int j = 0; j < num_rotors; j++){
                 for (int k = 0; k < ALPHABET_SIZE; k++){
                     if (rotor_config[j][k] == index){
                         index = k;
@@ -295,7 +295,7 @@ char* decrypt(char *message, int** rotor_config, int num_rotors) {
 void test_decrypt(){
     int rotor_indices[3] = {1,3,4};
     int** rotor_config = set_up_rotors(rotor_indices, 3);
-    char* decrypted_message = decrypt("YDEEN VNUEI", rotor_config, 3);
+    char* decrypted_message = decrypt("KLUUS GSTUO", rotor_config, 3);
     char* expected_result = "HELLO WORLD";
     int match = 1;
     for (int i = 0; i < my_strlen(expected_result); i++){
