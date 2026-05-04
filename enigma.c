@@ -230,6 +230,9 @@ void test_encrypt(){
             break;
         }
     }
+    if (!match){
+        printf("Test failed: expected %s, got %s\n", expected_result, encrypted_message);
+    }
     free(encrypted_message);
     for (int i = 0; i < 3; i++){
         free(rotor_config[i]);
@@ -287,6 +290,9 @@ void test_decrypt(){
             match = 0;
             break;
         }
+    }
+    if (!match){
+        printf("Test failed: expected %s, got %s\n", expected_result, decrypted_message);
     }
     free(decrypted_message);
     for (int i = 0; i < 3; i++){
