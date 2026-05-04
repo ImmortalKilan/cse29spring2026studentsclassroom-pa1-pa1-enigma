@@ -282,7 +282,7 @@ void test_decrypt(){
     int rotor_indices[3] = {1,3,4};
     int** rotor_config = set_up_rotors(rotor_indices, 3);
     char* decrypted_message = decrypt("YDEEN VNUEI", rotor_config, 3);
-    char* expected_result = "HELLO WORLD";
+    char* expected_result = "FBSSK JKLSP";
     int match = 1;
     for (int i = 0; i < my_strlen(expected_result); i++){
         if (decrypted_message[i] != expected_result[i]){
