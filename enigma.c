@@ -75,9 +75,7 @@ void test_parse_rotor_indices(){
             break;
         }
     }
-    if (!match){
-        printf("test failed!\n");
-    }
+
     free(actual_result);
 }
 
@@ -167,9 +165,6 @@ void test_rotate_rotors(){
             break;
         }
     }
-    if (!match){
-        printf("test failed!\n");
-    }
     for (int i = 0; i < 3; i++){
         free(rotor_config[i]);
     }
@@ -229,9 +224,6 @@ void test_encrypt(){
             break;
         }
     }
-    if (!match){
-        printf("test failed!\n");
-    }
     free(encrypted_message);
     for (int i = 0; i < 3; i++){
         free(rotor_config[i]);
@@ -289,9 +281,6 @@ void test_decrypt(){
             match = 0;
             break;
         }
-    }
-    if (!match){
-        printf("test failed!\n");
     }
     free(decrypted_message);
     for (int i = 0; i < 3; i++){
