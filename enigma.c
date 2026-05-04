@@ -110,11 +110,25 @@ int **set_up_rotors(int* rotor_indices, int num_rotors) {
 void test_set_up_rotors(){
     int rotor_indices[3] = {1,3,4};
     int** rotor_config = set_up_rotors(rotor_indices, 3);
+    int** expected_result = {
+        {4,10,12,5,11,6,3,16,21,25,13,19,14,22,24,7,23,20,18,15,0,8,1,17,2,9},
+        {4,18,14,21,15,25,9,0,24,16,20,8,17,7,23,11,13,5,19,6,10,3,2,12,22,1},
+        {20,10,24,7,23,19,12,1,5,11 ,9 ,14 ,25 ,8 ,17 ,6 ,26 ,3 ,18 ,15 ,0 ,4 ,13 ,22 ,2 ,16}
+    };
+    int match = 1;
     for (int i = 0; i < 3; i++){
         for (int j = 0; j < 26; j++){
-            printf("%d ", rotor_config[i][j]);
+            if (rotor_config[i][j] != expected_result[i][j]){
+                match = 0;
+                break;
+            }
         }
-        printf("\n");
+        if (!match){
+            break;
+        }
+    }
+    if (!match){
+        printf("test failed!\n");
     }
     for (int i = 0; i < 3; i++){
         free(rotor_config[i]);
@@ -147,11 +161,25 @@ void test_rotate_rotors(){
     int rotor_indices[3] = {1,3,4};
     int** rotor_config = set_up_rotors(rotor_indices, 3);
     rotate_rotors(rotor_config, 3, 29);
+    int** expected_result = {
+        {6,3,16,21,25,4,10,12,5,11,6,3,16,21,25,13,19,14,22,24,7,23,20,18,15,0},
+        {9,0,24,16,20,8,17,7,23,11 ,13 ,5 ,19 ,6 ,10 ,3 ,2 ,12 ,22 ,1 ,4 ,18 ,14 ,21 ,15 ,25},
+        {12 ,1 ,5 ,11 ,9 ,14 ,25 ,8 ,17 ,6 ,26 ,3 ,18 ,15 ,0 ,4 ,13 ,22 ,2 ,16}
+    };
+    int match = 1;
     for (int i = 0; i < 3; i++){
         for (int j = 0; j < 26; j++){
-            printf("%d ", rotor_config[i][j]);
+            if (rotor_config[i][j] != expected_result[i][j]){
+                match = 0;
+                break;
+            }
         }
-        printf("\n");
+        if (!match){
+            break;
+        }
+    }
+    if (!match){
+        printf("test failed!\n");
     }
     for (int i = 0; i < 3; i++){
         free(rotor_config[i]);
@@ -204,7 +232,17 @@ void test_encrypt(){
     int rotor_indices[3] = {1,3,4};
     int** rotor_config = set_up_rotors(rotor_indices, 3);
     char* encrypted_message = encrypt("HELLO WORLD", rotor_config, 3);
-    printf("%s\n", encrypted_message);
+    char** expected_result = "MFNCZ YGJMG";
+    int match = 1;
+    for (int i = 0; i < my_strlen(expected_result); i++){
+        if (encrypted_message[i] != expected_result[i]){
+            match = 0;
+            break;
+        }
+    }
+    if (!match){
+        printf("test failed!\n");
+    }
     free(encrypted_message);
     for (int i = 0; i < 3; i++){
         free(rotor_config[i]);
@@ -255,7 +293,17 @@ void test_decrypt(){
     int rotor_indices[3] = {1,3,4};
     int** rotor_config = set_up_rotors(rotor_indices, 3);
     char* decrypted_message = decrypt("MFNCZ YGJMG", rotor_config, 3);
-    printf("Decrypted message: %s\n", decrypted_message);
+    char** expected_result = "HELLO WORLD";
+    int match = 1;
+    for (int i = 0; i < my_strlen(expected_result); i++){
+        if (decrypted_message[i] != expected_result[i]){
+            match = 0;
+            break;
+        }
+    }
+    if (!match){
+        printf("test failed!\n");
+    }
     free(decrypted_message);
     for (int i = 0; i < 3; i++){
         free(rotor_config[i]);
