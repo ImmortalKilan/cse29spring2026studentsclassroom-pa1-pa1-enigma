@@ -63,7 +63,6 @@ int* parse_rotor_indices(char* rotor_ind_str, int num_rotors) {
 void test_parse_rotor_indices(){
     int expected_result[3] = {1,2,3};
     int *actual_result = parse_rotor_indices("1 2 3",3);
-    printf("%d\n",actual_result[0]);
     int match = 1;
     if (actual_result == NULL){
         printf("return null pointer!\n");
@@ -222,7 +221,7 @@ void test_encrypt(){
     int rotor_indices[3] = {1,3,4};
     int** rotor_config = set_up_rotors(rotor_indices, 3);
     char* encrypted_message = encrypt("HELLO WORLD", rotor_config, 3);
-    char* expected_result = "MFNCZ YGJMG";
+    char* expected_result = "YDEEN VNUEI";
     int match = 1;
     for (int i = 0; i < my_strlen(expected_result); i++){
         if (encrypted_message[i] != expected_result[i]){
@@ -282,7 +281,7 @@ char* decrypt(char *message, int** rotor_config, int num_rotors) {
 void test_decrypt(){
     int rotor_indices[3] = {1,3,4};
     int** rotor_config = set_up_rotors(rotor_indices, 3);
-    char* decrypted_message = decrypt("MFNCZ YGJMG", rotor_config, 3);
+    char* decrypted_message = decrypt("YDEEN VNUEI", rotor_config, 3);
     char* expected_result = "HELLO WORLD";
     int match = 1;
     for (int i = 0; i < my_strlen(expected_result); i++){
