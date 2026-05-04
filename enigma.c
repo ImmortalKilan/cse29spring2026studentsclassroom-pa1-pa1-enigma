@@ -280,6 +280,11 @@ int main(int argc, char* argv[]) {
     int rotations = atoi(argv[5]);
     int* rotor_indices = parse_rotor_indices(rotor_indices_str, num_rotors);
     int** rotor_config = set_up_rotors(rotor_indices, num_rotors);
+    test_rotate_rotors();
+    test_set_up_rotors();
+    test_parse_rotor_indices();
+    test_encrypt();
+    test_decrypt();
     if (mode == 'e'){
         if (rotations > 0){
             rotate_rotors(rotor_config, num_rotors, rotations);
